@@ -14,56 +14,18 @@ Users can:
 
 ## How to run the project
 
-You can run the app either **without Docker** (Node.js on your machine) or **with Docker**. Both start a frontend and a backend.
-
-### Option 1: Run without Docker
-
-**Prerequisites:** Node.js 20+ and npm installed.
-
-#### 1. Install dependencies
-From the project root, install the frontend and backend dependencies:
-```bash
-npm install
-cd server && npm install && cd ..
-```
-
-#### 2. Start the backend server
-In one terminal, run:
-```bash
-cd server
-npm start
-```
-
-The backend will be available at:
-```text
-http://localhost:3001
-```
-
-#### 3. Start the frontend
-In a separate terminal, from the project root, run:
-```bash
-npm run dev
-```
-
-Then open the local Vite URL shown in the terminal, usually:
-```text
-http://localhost:5173
-```
-
-The frontend proxies API calls (`/api/*`) to the backend automatically, so no extra configuration is needed. To point the frontend at a different backend, set the `VITE_BACKEND_URL` environment variable before running `npm run dev`.
-
-### Option 2: Run with Docker
+This application runs entirely in Docker. Both the frontend and backend are started with a single command.
 
 **Prerequisites:** Docker and Docker Compose installed.
 
-From the project root, build and start both services with a single command:
+From the project root, build and start both services:
 ```bash
 docker compose up --build
 ```
 
 This starts:
 - the **frontend** at `http://localhost:5173`
-- the **backend** at `http://localhost:3002` (mapped from the container's port 3001 to avoid clashing with a locally running backend)
+- the **backend** at `http://localhost:3001`
 
 Open the app at:
 ```text
@@ -76,8 +38,6 @@ To stop the containers, press `Ctrl+C`, then remove them with:
 ```bash
 docker compose down
 ```
-
-> **Note:** If you prefer to run the backend locally while using the frontend in Docker, stop the local backend process first or adjust the `VITE_BACKEND_URL` in `docker-compose.yml`.
 
 ## API endpoints
 
