@@ -26,6 +26,8 @@ const initialFormState: FormState = {
 function App() {
   const [supervisors, setSupervisors] = useState<Supervisor[]>([])
   const [form, setForm] = useState<FormState>(initialFormState)
+  const [emailEnabled, setEmailEnabled] = useState(false)
+  const [phoneEnabled, setPhoneEnabled] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
   const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -77,6 +79,8 @@ function App() {
 
       setSuccessMessage(payload.message ?? 'Request submitted successfully.')
       setForm(initialFormState)
+      setEmailEnabled(false)
+      setPhoneEnabled(false)
     } catch {
       setErrors(['Unable to submit request right now.'])
     } finally {
@@ -87,85 +91,127 @@ function App() {
   return (
     <main className="app-shell">
       <section className="card">
-        <div className="card-header">
-          <h1>Supervisor Notification Request</h1>
-          <p className="subtitle">
-            Submit your contact information so the selected supervisor can be notified.
-          </p>
+        <header className="card-header">
+          <h1>Notification Form</h1>
+        </header>
+
+        <div className="card-body">
+          {errors.length > 0 && (
+            <div className="message error" role="alert">
+              <ul>
+                {errors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="message success" role="status">
+              {successMessage}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="form">
+            <div className="field-row">
+              <label className="field">
+                <span className="field-label">First Name</span>
+                <input
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+
+              <label className="field">
+                <span className="field-label">Last Name</span>
+                <input
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+
+            <p className="notify-heading">How would you prefer to be notified?</p>
+
+            <div className="field-row">
+              <div className="field">
+                <label className="check-label">
+                  <input
+                    type="checkbox"
+                    checked={emailEnabled}
+                    onChange={(event) => {
+                      setEmailEnabled(event.target.checked)
+                      if (!event.target.checked) {
+                        setForm((current) => ({ ...current, email: '' }))
+                      }
+                    }}
+                  />
+                  <span>Email</span>
+                </label>
+                <input
+                  name="email"
+                  type="email"
+                  aria-label="Email"
+                  value={form.email}
+                  onChange={handleChange}
+                  disabled={!emailEnabled}
+                />
+              </div>
+
+              <div className="field">
+                <label className="check-label">
+                  <input
+                    type="checkbox"
+                    checked={phoneEnabled}
+                    onChange={(event) => {
+                      setPhoneEnabled(event.target.checked)
+                      if (!event.target.checked) {
+                        setForm((current) => ({ ...current, phoneNumber: '' }))
+                      }
+                    }}
+                  />
+                  <span>Phone Number</span>
+                </label>
+                <input
+                  name="phoneNumber"
+                  aria-label="Phone Number"
+                  value={form.phoneNumber}
+                  onChange={handleChange}
+                  disabled={!phoneEnabled}
+                />
+              </div>
+            </div>
+
+            <div className="supervisor-field">
+              <label className="field">
+                <span className="field-label">Supervisor</span>
+                <select
+                  name="supervisor"
+                  value={form.supervisor}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select...</option>
+                  {supervisors.map((supervisor) => (
+                    <option key={supervisor.id} value={supervisor.label}>
+                      {supervisor.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="submit-row">
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? 'SUBMITTING...' : 'SUBMIT'}
+              </button>
+            </div>
+          </form>
         </div>
-
-        {errors.length > 0 && (
-          <div className="message error" role="alert">
-            <ul>
-              {errors.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {successMessage && (
-          <div className="message success" role="status">
-            {successMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="form-grid">
-          <label>
-            First name
-            <input
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Last name
-            <input
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              required
-            />
-          </label>
-
-          <label>
-            Email
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Phone number
-            <input
-              name="phoneNumber"
-              value={form.phoneNumber}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            Supervisor
-            <select name="supervisor" value={form.supervisor} onChange={handleChange} required>
-              <option value="">Select a supervisor</option>
-              {supervisors.map((supervisor) => (
-                <option key={supervisor.id} value={supervisor.label}>
-                  {supervisor.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? 'Submitting...' : 'Submit request'}
-          </button>
-        </form>
       </section>
     </main>
   )
