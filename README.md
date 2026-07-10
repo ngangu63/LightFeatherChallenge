@@ -18,7 +18,7 @@ A small full-stack module that lets an employee submit a notification request fo
 - [Deployment](#deployment)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
-- [License](#license)
+
 
 ---
 
@@ -318,6 +318,4 @@ LightFeatherChallenge/
 
 ---
 
-## License
 
-Released under the [MIT License](LICENSE). If no `LICENSE` file is present, treat this as an internal challenge submission.
