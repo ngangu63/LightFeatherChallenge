@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react'
 import './App.css'
 
 type Supervisor = {
@@ -54,7 +54,7 @@ function App() {
     setForm((current) => ({ ...current, [name]: value }))
   }
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrors([])
     setSuccessMessage('')
